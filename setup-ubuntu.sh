@@ -22,4 +22,4 @@ wget -O signal-desktop.sources https://updates.signal.org/static/desktop/apt/sig
 cat signal-desktop.sources | sudo tee /etc/apt/sources.list.d/signal-desktop.sources > /dev/null
 sudo apt update && sudo apt install signal-desktop -y
 
-sudo apt install -y syncthing
+sudo apt install -y syncthing wireguard
