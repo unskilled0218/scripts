@@ -15,8 +15,7 @@ flatpak install flathub com.bitwarden.desktop -y
 flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
 flatpak install flathub org.qbittorrent.qBittorrent -y
 flatpak install flathub com.moonlight_stream.Moonlight -y
-flatpak install flathub org.gnome.Music -y
-flatpak install flathub com.toolstack.Folio -y
+flatpak install flathub io.bassi.Amberol -y
 
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg;
 cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
