@@ -7,6 +7,7 @@ sudo apt install gnome-software-plugin-flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 flatpak install flathub io.gitlab.librewolf-community -y
+flatpak install flathub org.mozilla.firefox -y
 flatpak install flathub org.torproject.torbrowser-launcher -y
 flatpak install flathub com.discordapp.Discord -y
 flatpak install flathub com.vscodium.codium -y
