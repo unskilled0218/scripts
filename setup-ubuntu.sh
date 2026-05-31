@@ -2,7 +2,7 @@
 
 sudo apt update && apt full-upgrade -y
 
-sudo apt install -y flatpak syncthing wireguard vim
+sudo apt install -y flatpak syncthing wireguard vim wireguard
 sudo apt install -y gnome-software-plugin-flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
