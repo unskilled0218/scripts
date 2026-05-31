@@ -2,7 +2,7 @@
 
 sudo apt update && apt full-upgrade -y
 
-sudo apt install -y flatpak
+sudo apt install -y flatpak syncthing wireguard vim
 sudo apt install gnome-software-plugin-flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
@@ -16,6 +16,7 @@ flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
 flatpak install flathub org.qbittorrent.qBittorrent -y
 flatpak install flathub com.moonlight_stream.Moonlight -y
 flatpak install flathub io.bassi.Amberol -y
+flatpak install flathub org.kde.haruna -y
 
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg;
 cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
@@ -23,4 +24,4 @@ wget -O signal-desktop.sources https://updates.signal.org/static/desktop/apt/sig
 cat signal-desktop.sources | sudo tee /etc/apt/sources.list.d/signal-desktop.sources > /dev/null
 sudo apt update && sudo apt install signal-desktop -y
 
-sudo apt install -y syncthing wireguard
+reboot
