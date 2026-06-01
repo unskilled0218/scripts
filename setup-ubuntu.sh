@@ -11,6 +11,7 @@ flatpak install flathub org.mozilla.firefox -y
 flatpak install flathub org.torproject.torbrowser-launcher -y
 flatpak install flathub com.discordapp.Discord -y
 flatpak install flathub com.vscodium.codium -y
+flatpak install flathub org.gnome.gedit -y
 flatpak install flathub io.freetubeapp.FreeTube -y
 flatpak install flathub com.bitwarden.desktop -y
 flatpak install flathub io.github.ungoogled_software.ungoogled_chromium -y
