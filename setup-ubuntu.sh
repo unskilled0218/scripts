@@ -1,9 +1,33 @@
 #!/bin/bash
 
+# Returns "true" if running under GNOME (Wayland or X11), otherwise "false"
+is_gnome() {
+  # GNOME on Wayland
+  if [ "${XDG_CURRENT_DESKTOP:-}" = "GNOME" ] || [ "${DESKTOP_SESSION:-}" = "gnome" ]; then
+    return 0
+  fi
+
+  # GNOME on X11 (common cases)
+  if [ "${XDG_SESSION_DESKTOP:-}" = "gnome" ] || [ "${DESKTOP_SESSION:-}" = "gnome" ]; then
+    return 0
+  fi
+
+  # Fallback: check gnome-shell process
+  if command -v pgrep >/dev/null 2>&1 && pgrep -x gnome-shell >/dev/null 2>&1; then
+    return 0
+  fi
+
+  return 1
+}
+
 sudo apt update && apt full-upgrade -y
 
 sudo apt install -y flatpak syncthing wireguard vim wireguard
-sudo apt install -y gnome-software-plugin-flatpak
+
+if is_gnome; then
+  sudo apt install -y gnome-software-plugin-flatpak
+fi
+
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 flatpak install flathub io.gitlab.librewolf-community -y
