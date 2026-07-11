@@ -80,12 +80,19 @@ flatpak install flathub io.bassi.Amberol -y
 flatpak install flathub org.kde.haruna -y
 flatpak install flathub com.orcaslicer.OrcaSlicer -y
 
+# Signal
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg;
 cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null
 wget -O signal-desktop.sources https://updates.signal.org/static/desktop/apt/signal-desktop.sources;
 cat signal-desktop.sources | sudo tee /etc/apt/sources.list.d/signal-desktop.sources > /dev/null
 sudo apt update && sudo apt install signal-desktop -y
 
+# ntr
 install_latest_deb_and_run "https://codeberg.org/musty8682/ntr-app/releases/"
+
+# Helium
+curl -fsSL https://raw.githubusercontent.com/imputnet/helium-linux/main/pubkey.asc | sudo gpg --dearmor -o /usr/share/keyrings/helium.gpg
+echo "deb [signed-by=/usr/share/keyrings/helium.gpg] https://pkg.helium.computer/deb stable main" | sudo tee /etc/apt/sources.list.d/helium.list
+sudo apt update && sudo apt install -y helium-bin
 
 reboot
