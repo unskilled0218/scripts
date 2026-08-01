@@ -76,6 +76,7 @@ flatpak install flathub io.freetubeapp.FreeTube -y
 flatpak install flathub com.bitwarden.desktop -y
 flatpak install flathub com.moonlight_stream.Moonlight -y
 flatpak install flathub com.orcaslicer.OrcaSlicer -y
+flatpak install flathub org.kde.haruna -y
 
 # Signal
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg;
