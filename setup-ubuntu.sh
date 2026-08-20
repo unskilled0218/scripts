@@ -57,7 +57,7 @@ install_latest_deb_and_run() {
 
 sudo apt update && apt full-upgrade -y
 
-sudo apt install -y flatpak syncthing wireguard vim wireguard
+sudo apt install -y flatpak vim wireguard
 
 if is_gnome; then
   sudo apt install -y gnome-software-plugin-flatpak
