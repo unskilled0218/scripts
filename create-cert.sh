@@ -1,4 +1,5 @@
 #!/bin/bash
+# curl -fsSL https://git.lan/dev/scripts/raw/branch/main/create-cert.sh | bash -s -- home.lan
 
 mkdir $1 && cd $1
 
