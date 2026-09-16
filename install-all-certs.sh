@@ -14,6 +14,6 @@ else
     ca="$(basename "$p")"
     sudo cp $p /usr/local/share/ca-certificates/$ca
     sudo update-ca-certificates
-    openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /usr/local/share/ca-certificates/$ca.crt
+    openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /usr/local/share/ca-certificates/$ca
   done
 fi
