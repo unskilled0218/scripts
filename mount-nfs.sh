@@ -9,28 +9,24 @@ home=$(getent passwd "$uid" | cut -d: -f6) || return 1
   return 1
 }
 
-mkuserdir() {
-  local dirname="${1:-mydir}"
+mount() {
+  local nfsdirname="$1"
+  local dirname="$2"
 
   sudo install -d -o "$uid" -g "$gid" -m 0755 "$home/$dirname"
+  cat >> /etc/fstab <<EOF
+  truenas.lan:"/mnt/my-1/${nfsdirname}" "$home/$dirname" nfs defaults,_netdev,nofail 0 0
+EOF
 }
 
-mkuserdir nas
-mkuserdir nas/media
-mkuserdir nas/torrent
-mkuserdir nas/theatre
-mkuserdir nas/sync
-
-cat >> /etc/fstab <<EOF
-truenas.lan:/mnt/my-1/media/ /home/${USER}/nas/media nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/torrent/ /home/${USER}/nas/torrent nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/theatre/ /home/${USER}/nas/theatre nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/sync/ /home/${USER}/nas/sync nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/sync/Sync/Music /home/${USER}/Music nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/sync/Sync/Pictures /home/${USER}/Pictures nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/sync/Sync/My /home/${USER}/Documents/My nfs defaults,_netdev,nofail 0 0
-truenas.lan:/mnt/my-1/sync/Sync/Notes /home/${USER}/Documents/Notes nfs defaults,_netdev,nofail 0 0
-EOF
+mount media nas/media
+mount torrent nas/torrent
+mount theatre nas/theatre
+mount sync nas/sync
+mount sync/Sync/Music Music
+mount sync/Sync/Pictures Pictures
+mount sync/Sync/Sync/My Documents/My
+mount sync/Sync/Sync/Notes Documents/Notes
 
 sudo systemctl daemon-reload
 sudo mount -a
