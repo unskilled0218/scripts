@@ -15,7 +15,7 @@ mount() {
 
   sudo install -d -o "$uid" -g "$gid" -m 0755 "$home/$dirname"
   cat >> /etc/fstab <<EOF
-  truenas.lan:"/mnt/my-1/${nfsdirname}" "$home/$dirname" nfs defaults,_netdev,nofail 0 0
+truenas.lan:/mnt/my-1/${nfsdirname} $home/$dirname nfs defaults,_netdev,nofail 0 0
 EOF
 }
 
