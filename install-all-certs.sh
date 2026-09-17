@@ -1,11 +1,6 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-  echo "Need certs path"
-  exit 0
-fi
-
-mapfile -t paths < <(find $1 -type f -name "*.lanCA.crt" -print)
+mapfile -t paths < <(find ~/nas/${USER}/sync/certs -type f -name "*.lanCA.crt" -print)
 
 if ((${#paths[@]} == 0)); then
   echo "empty"

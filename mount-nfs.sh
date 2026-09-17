@@ -12,3 +12,6 @@ truenas.lan:/mnt/my-1/sync/Sync/Pictures /home/think/Pictures nfs defaults,_netd
 truenas.lan:/mnt/my-1/sync/Sync/My /home/think/Documents/My nfs defaults,_netdev,nofail 0 0
 truenas.lan:/mnt/my-1/sync/Sync/Notes /home/think/Documents/Notes nfs defaults,_netdev,nofail 0 0
 EOF
+
+sudo systemctl daemon-reload
+sudo mount -a
