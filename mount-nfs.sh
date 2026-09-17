@@ -13,11 +13,14 @@ mount() {
   local nfsdirname="$1"
   local dirname="$2"
 
-  sudo install -d -o "$uid" -g "$gid" -m 0755 "$home/$dirname"
+  sudo install -d -o "$uid" -g "$gid" -m 0775 "$home/$dirname"
   cat >> /etc/fstab <<EOF
 truenas.lan:/mnt/my-1/${nfsdirname} $home/$dirname nfs defaults,_netdev,nofail 0 0
 EOF
 }
+
+mkdir $home/nas
+chown -R $uid:$gid $home/nas
 
 mount media nas/media
 mount torrent nas/torrent
