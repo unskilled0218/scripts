@@ -1,8 +1,27 @@
 #!/bin/bash
 
-mkdir -p /home/${USER}/nas /home/${USER}/nas/media /home/${USER}/nas/torrent /home/${USER}/nas/theatre /home/${USER}/nas/sync
+uid=1000
+gid=$(getent passwd "$uid" | cut -d: -f4)
 
-sudo cat >> /etc/fstab <<EOF
+home=$(getent passwd "$uid" | cut -d: -f6) || return 1
+[ -n "$home" ] || {
+  echo "No user found with UID $uid" >&2
+  return 1
+}
+
+mkuserdir() {
+  local dirname="${1:-mydir}"
+
+  sudo install -d -o "$uid" -g "$gid" -m 0755 "$home/$dirname"
+}
+
+mkuserdir nas
+mkuserdir nas/media
+mkuserdir nas/torrent
+mkuserdir nas/theatre
+mkuserdir nas/sync
+
+cat >> /etc/fstab <<EOF
 truenas.lan:/mnt/my-1/media/ /home/${USER}/nas/media nfs defaults,_netdev,nofail 0 0
 truenas.lan:/mnt/my-1/torrent/ /home/${USER}/nas/torrent nfs defaults,_netdev,nofail 0 0
 truenas.lan:/mnt/my-1/theatre/ /home/${USER}/nas/theatre nfs defaults,_netdev,nofail 0 0
