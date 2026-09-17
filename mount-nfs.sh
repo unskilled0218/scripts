@@ -25,8 +25,9 @@ mount theatre nas/theatre
 mount sync nas/sync
 mount sync/Sync/Music Music
 mount sync/Sync/Pictures Pictures
-mount sync/Sync/Sync/My Documents/My
-mount sync/Sync/Sync/Notes Documents/Notes
+mount sync/Sync/My Documents/My
+mount sync/Sync/Notes Documents/Notes
+mount sync/Sync/Books Documents/Books
 
 sudo systemctl daemon-reload
 sudo mount -a
