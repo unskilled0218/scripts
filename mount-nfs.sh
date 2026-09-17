@@ -2,7 +2,7 @@
 
 mkdir -p /home/${USER}/nas /home/${USER}/nas/media /home/${USER}/nas/torrent /home/${USER}/nas/theatre /home/${USER}/nas/sync
 
-cat >> /etc/fstab <<EOF
+sudo cat >> /etc/fstab <<EOF
 truenas.lan:/mnt/my-1/media/ /home/${USER}/nas/media nfs defaults,_netdev,nofail 0 0
 truenas.lan:/mnt/my-1/torrent/ /home/${USER}/nas/torrent nfs defaults,_netdev,nofail 0 0
 truenas.lan:/mnt/my-1/theatre/ /home/${USER}/nas/theatre nfs defaults,_netdev,nofail 0 0
