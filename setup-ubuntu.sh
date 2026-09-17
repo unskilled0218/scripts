@@ -21,13 +21,13 @@ wget -O signal-desktop.sources https://updates.signal.org/static/desktop/apt/sig
 cat signal-desktop.sources | sudo tee /etc/apt/sources.list.d/signal-desktop.sources > /dev/null
 sudo apt update && sudo apt install signal-desktop -y
 
-# ntr
-bash install_latest_deb_and_run.sh "https://codeberg.org/musty8682/ntr-app/releases/"
-
 # Helium
 curl -fsSL https://raw.githubusercontent.com/imputnet/helium-linux/main/pubkey.asc | sudo gpg --dearmor -o /usr/share/keyrings/helium.gpg
 echo "deb [signed-by=/usr/share/keyrings/helium.gpg] https://pkg.helium.computer/deb stable main" | sudo tee /etc/apt/sources.list.d/helium.list
 sudo apt update && sudo apt install -y helium-bin
+
+# ntr
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install_latest_deb_and_run.sh" | bash -s -- "https://codeberg.org/musty8682/ntr-app/releases/"
 
 # Mount nfs
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs.sh" | bash
