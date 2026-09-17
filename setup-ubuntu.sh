@@ -27,7 +27,7 @@ echo "deb [signed-by=/usr/share/keyrings/helium.gpg] https://pkg.helium.computer
 sudo apt update && sudo apt install -y helium-bin
 
 # ntr
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install_latest_deb_and_run.sh" | bash -s -- "https://codeberg.org/musty8682/ntr-app/releases/"
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install_deb_and_run.sh" | bash -s -- "https://codeberg.org/musty8682/ntr-app/releases/"
 
 # Mount nfs
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs.sh" | bash
