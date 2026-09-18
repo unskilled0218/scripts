@@ -1,13 +1,6 @@
 #!/bin/bash
 
-uid=1000
-home=$(getent passwd "$uid" | cut -d: -f6) || return 1
-[ -n "$home" ] || {
-  echo "No user found with UID $uid" >&2
-  return 1
-}
-
-mapfile -t paths < <(find $home/nas/sync/certs -type f -name "*.lanCA.crt" -print)
+mapfile -t paths < <(find ~/nas/sync/certs -type f -name "*.lanCA.crt" -print)
 
 if ((${#paths[@]} == 0)); then
   echo "empty"
