@@ -8,6 +8,6 @@ curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu.sh | bash
 # create/install cert
 
 ```bash
-curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/certs/create-cert.sh | bash -s -- home.lan
-curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/certs/install-cert.sh | bash -s -- home.lan
+curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/cert/create-cert.sh | bash -s -- home.lan
+curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/cert/install-cert.sh | bash -s -- home.lan
 ```
