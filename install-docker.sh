@@ -18,4 +18,4 @@ EOF
 
 apt update
 apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-usermod -aG docker dev
+usermod -aG docker $(getent passwd 1000 | cut -d: -f1)
