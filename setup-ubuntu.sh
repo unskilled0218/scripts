@@ -63,11 +63,8 @@ sudo add-apt-repository -y ppa:xtradeb/apps
 sudo apt update
 sudo apt install -y ungoogled-chromium
 
-# ntr
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-deb-and-run.sh" | bash -s -- "https://codeberg.org/musty8682/ntr-app/releases/"
-
-# Mount nfs
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs.sh" | bash
-
-# Install custom certs
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-all-certs.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ntfy.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/caps-lock-as-ctrl.sh" | bash
