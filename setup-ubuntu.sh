@@ -23,10 +23,6 @@ flatpak install flathub com.moonlight_stream.Moonlight -y
 flatpak install flathub com.orcaslicer.OrcaSlicer -y
 flatpak install flathub org.kde.haruna -y
 
-if ! is_installed firefox; then
-  flatpak install flathub org.mozilla.firefox -y
-fi
-
 if ! is_installed gedit; then
   flatpak install flathub org.gnome.gedit -y
 fi
@@ -44,6 +40,11 @@ sudo apt update && sudo apt install signal-desktop -y
 flatpak install flathub com.discordapp.Discord -y
 
 # Browser
+
+## Firefox
+if ! is_installed firefox; then
+  flatpak install flathub org.mozilla.firefox -y
+fi
 
 ## LibreWolf
 sudo apt update && sudo apt install extrepo -y
@@ -63,7 +64,7 @@ sudo add-apt-repository -y ppa:xtradeb/apps
 sudo apt update
 sudo apt install -y ungoogled-chromium
 
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-deb-and-run.sh" | bash -s -- "https://codeberg.org/musty8682/ntr-app/releases/"
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-deb-and-run.sh" | bash -s -- "https://git.lan/ntr/ntr-app/releases/"
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-all-certs.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ntfy.sh" | bash
