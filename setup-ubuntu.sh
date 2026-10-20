@@ -69,3 +69,4 @@ curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-all-certs.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ntfy.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/caps-lock-as-ctrl.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs-when-wired.sh" | bash
