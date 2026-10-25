@@ -8,17 +8,15 @@ set -euo pipefail
 SERVER="truenas.lan"
 
 EXPORTS=(
-  "/mnt/my-1/theatre"
-  "/mnt/my-1/torrent"
-  "/mnt/my-1/dash-board-wallpaper"
-  "/mnt/my-1/container"
+  "/mnt/backup/theatre"
+  "/mnt/backup/torrent"
+  "/mnt/backup/my/wallpaper"
 )
 
 MOUNTPOINTS=(
-  "/home/think/my-1/theatre"
-  "/home/think/my-1/torrent"
-  "/home/think/my-1/wallpaper"
-  "/home/think/my-1/container"
+  "/home/think/backup/theatre"
+  "/home/think/backup/torrent"
+  "/home/think/backup/wallpaper"
 )
 
 if ((${#EXPORTS[@]} != ${#MOUNTPOINTS[@]})); then
