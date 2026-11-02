@@ -17,9 +17,3 @@ or just
 ```bash
 curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/cert/create-install.sh | bash -s -- home.lan
 ```
-
-# install docker
-
-```bash
-curl -fsSLk https://git.lan/dev/scripts/raw/branch/main/install-docker.sh | bash
-```
