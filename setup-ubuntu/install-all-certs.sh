@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mapfile -t paths < <(find ~/nas/sync/certs -type f -name "*.lanCA.crt" -print)
+mapfile -t paths < <(find ~/backup/sync/certs -type f -name "*.lanCA.crt" -print)
 
 if ((${#paths[@]} == 0)); then
   echo "empty"

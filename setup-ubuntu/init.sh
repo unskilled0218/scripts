@@ -4,28 +4,37 @@ sudo apt update && sudo apt full-upgrade -y
 
 sudo apt install -y flatpak vim wireguard nfs-common software-properties-common
 
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/is_gnome.sh" -o /tmp/is_gnome.sh
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/is_installed.sh" -o /tmp/is_installed.sh
-source /tmp/is_gnome.sh
-source /tmp/is_installed.sh
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/install-all-certs.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/nfs.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/ntfy.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/caps-lock-as-ctrl.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/wireguard.sh" | bash
 
-if is_gnome; then
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/func/is-gnome.sh" -o /tmp/is-gnome.sh
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/func/is-installed.sh" -o /tmp/is-installed.sh
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/func/install-pkg.sh" -o /tmp/install-pkg.sh
+source /tmp/is-gnome.sh
+source /tmp/is-installed.sh
+source /tmp/install-pkg.sh
+
+if is-gnome; then
   sudo apt install -y gnome-software-plugin-flatpak
 fi
 
 # flatpak add flathub
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-flatpak install flathub com.vscodium.codium -y
-flatpak install flathub io.freetubeapp.FreeTube -y
-flatpak install flathub com.bitwarden.desktop -y
-flatpak install flathub com.moonlight_stream.Moonlight -y
-flatpak install flathub com.orcaslicer.OrcaSlicer -y
-flatpak install flathub org.kde.haruna -y
-
-if ! is_installed gedit; then
+if ! is-installed gedit; then
   flatpak install flathub org.gnome.gedit -y
 fi
+
+flatpak install flathub org.kde.dolphin -y
+flatpak install flathub org.kde.haruna -y
+flatpak install flathub com.vscodium.codium -y
+flatpak install flathub com.orcaslicer.OrcaSlicer -y
+flatpak install flathub com.bitwarden.desktop -y
+flatpak install flathub com.moonlight_stream.Moonlight -y
+flatpak install flathub io.freetubeapp.FreeTube -y
 
 # Community
 
@@ -39,10 +48,13 @@ sudo apt update && sudo apt install signal-desktop -y
 ## Discord
 flatpak install flathub com.discordapp.Discord -y
 
+## Commet
+install-pkg "https://github.com/commetchat/commet/releases/" "flatpak"
+
 # Browser
 
 ## Firefox
-if ! is_installed firefox; then
+if ! is-installed firefox; then
   flatpak install flathub org.mozilla.firefox -y
 fi
 
@@ -64,9 +76,5 @@ sudo add-apt-repository -y ppa:xtradeb/apps
 sudo apt update
 sudo apt install -y ungoogled-chromium
 
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-deb-and-run.sh" | bash -s -- "https://git.lan/ntr/ntr-app/releases/"
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs.sh" | bash
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/install-all-certs.sh" | bash
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ntfy.sh" | bash
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/caps-lock-as-ctrl.sh" | bash
-curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/mount-nfs-when-wired.sh" | bash
+## ntr
+install-pkg "https://git.lan/ntr/ntr-app/releases/" "deb"

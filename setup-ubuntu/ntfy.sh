@@ -10,6 +10,8 @@ default-host: https://ntfy.lan
 subscribe:
 - topic: general
   command: 'notify-send "$message"'
+- topic: dev
+  command: 'notify-send "$message"'
 EOF
 
 cat >> ~/.config/systemd/user/ntfy-client.service <<EOF
