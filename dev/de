@@ -38,12 +38,12 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-if [[ ! -f "$file" ]]; then
-  printf 'Compose file not found: %s\n' "$file" >&2
-  exit 1
-fi
 if ! command -v docker >/dev/null 2>&1; then
   printf 'Docker is required.\n' >&2
+  exit 1
+fi
+if [[ ! -f "$file" ]]; then
+  printf 'Compose file not found: %s\n' "$file" >&2
   exit 1
 fi
 if [[ -z "$service" ]]; then
@@ -59,4 +59,4 @@ if [[ -z "$service" ]]; then
   fi
   service="${services[0]}"
 fi
-exec docker compose -f "$file" exec -- "$service" bash
+exec docker exec -- "$service" bash
