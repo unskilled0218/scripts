@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case "${1:-}" in
+  ''|-h|--help) ;;
+  *) printf 'Usage: dhelp\n' >&2; exit 2 ;;
+esac
+
+cat <<'HELP'
+Docker shortcuts (requires Docker with the Compose plugin):
+  dhelp                         Show this help.
+  dup [file] [arguments...]      Start Compose services in the background.
+  de [-f file] [-T] service [command...]
+                                Run a command in a running service (default: sh).
+  cdc [--force] [destination]    Copy the Compose template from Gitea main.
+  update-scripts [--force]       Update all installed shortcuts from Gitea main.
+
+dup and de default to ./docker-compose.yml.
+cdc defaults to ./docker-compose.yml and refuses to overwrite it.
+Set GITEA_TOKEN for private template access. HTTPS certificates must be trusted.
+
+Examples:
+  dup
+  dup ./docker-compose.yml web
+  de web
+  de -f ./other.yml -T web env
+  cdc --force
+
+Run each command with --help for details.
+HELP

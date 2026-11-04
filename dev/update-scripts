@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+options=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      cat <<'HELP'
+Usage: update-scripts [--force]
+Update dhelp, dup, de, cdc, and update-scripts from https://git.lan/dev/scripts, branch main.
+Requires Git. Uses install.sh from the downloaded repository.
+Set GITEA_TOKEN for private repository access, or use Git's credential helper.
+Trust the server's TLS certificate. TLS verification remains enabled.
+Local edits and unrelated commands are protected unless --force is used.
+HELP
+      exit 0
+      ;;
+    --force) options=(--force); shift ;;
+    *) printf 'Unknown argument: %s\n' "$1" >&2; exit 2 ;;
+  esac
+done
+
+if ! command -v git >/dev/null 2>&1; then
+  printf 'Git is required.\n' >&2
+  exit 1
+fi
+temporary=$(mktemp -d "${TMPDIR:-/tmp}/dev-scripts-update.XXXXXXXX")
+trap 'rm -rf -- "$temporary"' EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+if [[ -n "${GITEA_TOKEN:-}" ]]; then
+  # Git reads the token from the environment, not a URL or command argument.
+  cat > "$temporary/askpass" <<'ASKPASS'
+#!/usr/bin/env bash
+case "$1" in
+  *Username*) printf '%s\n' 'oauth2' ;;
+  *) printf '%s\n' "$GITEA_TOKEN" ;;
+esac
+ASKPASS
+  chmod 700 "$temporary/askpass"
+  export GIT_ASKPASS="$temporary/askpass"
+fi
+GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=true clone --quiet --depth 1 --single-branch \
+  --branch main -- https://git.lan/dev/scripts.git "$temporary/repository"
+revision=$(git -C "$temporary/repository" rev-parse HEAD)
+bash "$temporary/repository/dev/install.sh" "${options[@]}" --source "$temporary/repository/dev"
+printf 'Updated from main at %s\n' "$revision"

@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'HELP'
+Usage: cdc [--force] [destination]
+Fetch compose/docker-compose.yml from dev/dev-docker on Gitea's main branch.
+The destination defaults to ./docker-compose.yml.
+Existing files are protected unless --force is supplied.
+Set GITEA_TOKEN if the repository is private. Trust the server's TLS certificate.
+Required environment variables and secrets depend on the downloaded template.
+HELP
+}
+
+destination='./docker-compose.yml'
+force=false
+destination_set=false
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --force) force=true ;;
+    -*) printf 'Unknown option: %s\n' "$1" >&2; exit 2 ;;
+    *)
+      if [[ "$destination_set" == true || -z "$1" ]]; then
+        usage >&2
+        exit 2
+      fi
+      destination="$1"
+      destination_set=true
+      ;;
+  esac
+  shift
+done
+if [[ -d "$destination" ]]; then
+  printf 'Destination is a directory: %s\n' "$destination" >&2
+  exit 1
+fi
+if [[ "$force" == false && ( -e "$destination" || -L "$destination" ) ]]; then
+  printf 'Destination exists; use --force to replace it: %s\n' "$destination" >&2
+  exit 1
+fi
+if ! command -v curl >/dev/null 2>&1; then
+  printf 'curl is required.\n' >&2
+  exit 1
+fi
+
+directory=$(dirname -- "$destination")
+temporary=$(mktemp "$directory/.cdc.XXXXXXXX")
+trap 'rm -f -- "$temporary"' EXIT
+headers=()
+if [[ -n "${GITEA_TOKEN:-}" ]]; then
+  headers+=(--header "Authorization: token $GITEA_TOKEN")
+fi
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
+  "${headers[@]}" \
+  --output "$temporary" \
+  'https://git.lan/dev/dev-docker/raw/branch/main/compose/docker-compose.yml'
+if [[ ! -s "$temporary" ]]; then
+  printf 'The template download was empty.\n' >&2
+  exit 1
+fi
+if [[ "$force" == true ]]; then
+  mv -fT -- "$temporary" "$destination"
+else
+  # A hard link prevents overwriting a file created during the download.
+  ln -T -- "$temporary" "$destination"
+fi
+printf 'Saved Compose template to %s\n' "$destination"
