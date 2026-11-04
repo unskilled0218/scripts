@@ -3,43 +3,41 @@ set -euo pipefail
 
 usage() {
   cat <<'HELP'
-Usage: de [-f file] [-T] [--] service [command...]
-Run a command in a running Compose service. The default command is sh.
-The file defaults to ./docker-compose.yml. Use -T for non-interactive input.
-Example: de -f ./other.yml -T web env
-Use Compose service names, not container names.
-For a one-off container, use docker compose run --rm instead.
+Usage: de [-f file] [service]
+Open interactive Bash in a running Compose service.
+The file defaults to ./docker-compose.yml. Bash must exist in the container.
+If service is omitted, exactly one running service must exist.
+Examples:
+  de
+  de web
+  de -f ./other.yml web
 HELP
 }
 
 file='./docker-compose.yml'
-options=()
+service=''
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
-    -f)
-      if [[ $# -lt 2 || -z "$2" ]]; then
-        printf 'Option -f requires a file.\n' >&2
+    -f|--file)
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
+        printf 'Option %s requires a file.\n' "$1" >&2
         exit 2
       fi
       file="$2"
       shift 2
       ;;
-    -T) options+=('-T'); shift ;;
-    --) shift; break ;;
     -*) printf 'Unknown option: %s\n' "$1" >&2; exit 2 ;;
-    *) break ;;
+    *)
+      if [[ -n "$service" || -z "$1" ]]; then
+        usage >&2
+        exit 2
+      fi
+      service="$1"
+      shift
+      ;;
   esac
 done
-if [[ $# -eq 0 || -z "$1" ]]; then
-  usage >&2
-  exit 2
-fi
-service="$1"
-shift
-if [[ $# -eq 0 ]]; then
-  set -- sh
-fi
 if [[ ! -f "$file" ]]; then
   printf 'Compose file not found: %s\n' "$file" >&2
   exit 1
@@ -48,4 +46,17 @@ if ! command -v docker >/dev/null 2>&1; then
   printf 'Docker is required.\n' >&2
   exit 1
 fi
-exec docker compose -f "$file" exec "${options[@]}" -- "$service" "$@"
+if [[ -z "$service" ]]; then
+  running=$(docker compose -f "$file" ps --services --status running)
+  if [[ -z "$running" ]]; then
+    printf 'No running Compose services found.\n' >&2
+    exit 1
+  fi
+  mapfile -t services <<< "$running"
+  if [[ ${#services[@]} -ne 1 ]]; then
+    printf 'Multiple running services; specify one:\n%s\n' "$running" >&2
+    exit 2
+  fi
+  service="${services[0]}"
+fi
+exec docker compose -f "$file" exec -- "$service" bash

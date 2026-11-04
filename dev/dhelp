@@ -10,20 +10,20 @@ cat <<'HELP'
 Docker shortcuts (requires Docker with the Compose plugin):
   dhelp                         Show this help.
   dup [file] [arguments...]      Start Compose services in the background.
-  de [-f file] [-T] service [command...]
-                                Run a command in a running service (default: sh).
+  de [-f file] [service]         Open interactive Bash in a running Compose service.
   cdc [--force] [destination]    Copy the Compose template from Gitea main.
   update-scripts [--force]       Update all installed shortcuts from Gitea main.
 
 dup and de default to ./docker-compose.yml.
+de selects the only running service, or accepts an explicit service name.
 cdc defaults to ./docker-compose.yml and refuses to overwrite it.
 Set GITEA_TOKEN for private template access. HTTPS certificates must be trusted.
 
 Examples:
   dup
   dup ./docker-compose.yml web
-  de web
-  de -f ./other.yml -T web env
+  de
+  de -f ./other.yml web
   cdc --force
 
 Run each command with --help for details.
