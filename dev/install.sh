@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+source_dir=''
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  source_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+fi
 force=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -12,6 +15,9 @@ Install dhelp, dup, de, cdc, and update-scripts into ~/.local/bin.
 Protect unrelated files and locally edited commands unless --force is used.
 Use --source to install commands from another directory.
 Requires Bash, sha256sum, and standard GNU file utilities. No sudo is needed.
+When piped into Bash, also requires Git and downloads main from https://git.lan/dev/scripts.
+Set GITEA_TOKEN for private repository access, or use Git's credential helper.
+The Git download verifies TLS; the server certificate must be trusted.
 HELP
       exit 0
       ;;
@@ -27,6 +33,38 @@ HELP
     *) printf 'Unknown argument: %s\n' "$1" >&2; exit 2 ;;
   esac
 done
+
+if [[ -z "$source_dir" ]]; then
+  if ! command -v git >/dev/null 2>&1; then
+    printf 'Git is required for installation through curl | bash.\n' >&2
+    exit 1
+  fi
+  temporary=$(mktemp -d "${TMPDIR:-/tmp}/dev-scripts-install.XXXXXXXX")
+  trap 'rm -rf -- "$temporary"' EXIT
+  trap 'exit 129' HUP
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  if [[ -n "${GITEA_TOKEN:-}" ]]; then
+    cat > "$temporary/askpass" <<'ASKPASS'
+#!/usr/bin/env bash
+case "$1" in
+  *Username*) printf '%s\n' 'oauth2' ;;
+  *) printf '%s\n' "$GITEA_TOKEN" ;;
+esac
+ASKPASS
+    chmod 700 "$temporary/askpass"
+    export GIT_ASKPASS="$temporary/askpass"
+  fi
+  GIT_TERMINAL_PROMPT=0 git -c http.sslVerify=true clone --quiet --depth 1 --single-branch \
+    --branch main -- https://git.lan/dev/scripts.git "$temporary/repository" </dev/null
+  options=()
+  if [[ "$force" == true ]]; then
+    options=(--force)
+  fi
+  bash "$temporary/repository/dev/install.sh" "${options[@]}" \
+    --source "$temporary/repository/dev" </dev/null
+  exit 0
+fi
 
 commands=(dhelp dup de cdc update-scripts)
 destination="$HOME/.local/bin"
