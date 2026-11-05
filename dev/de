@@ -4,16 +4,20 @@ set -euo pipefail
 usage() {
   cat <<'HELP'
 Usage: de [-f file]
-Open interactive Bash in the running container from a Compose file.
+       de <container>
+Open interactive Bash in a container by name or ID, or resolve it from Compose.
 The file defaults to ./docker-compose.yml. Bash must exist in the container.
-Exactly one running container must exist for the Compose project.
+Compose mode requires exactly one running container. Do not combine -f with a container.
 Examples:
   de
   de -f ./other.yml
+  de my-container
 HELP
 }
 
 file='./docker-compose.yml'
+file_set=false
+container=''
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
@@ -23,15 +27,30 @@ while [[ $# -gt 0 ]]; do
         exit 2
       fi
       file="$2"
+      file_set=true
       shift 2
       ;;
     -*) printf 'Unknown option: %s\n' "$1" >&2; exit 2 ;;
-    *) usage >&2; exit 2 ;;
+    *)
+      if [[ -n "$container" || -z "$1" ]]; then
+        usage >&2
+        exit 2
+      fi
+      container="$1"
+      shift
+      ;;
   esac
 done
+if [[ -n "$container" && "$file_set" == true ]]; then
+  printf 'Do not combine a container name or ID with -f.\n' >&2
+  exit 2
+fi
 if ! command -v docker >/dev/null 2>&1; then
   printf 'Docker is required.\n' >&2
   exit 1
+fi
+if [[ -n "$container" ]]; then
+  exec docker exec -it "$container" bash
 fi
 if [[ ! -f "$file" ]]; then
   printf 'Compose file not found: %s\n' "$file" >&2

@@ -11,11 +11,12 @@ Docker shortcuts (requires Docker with the Compose plugin):
   dhelp                         Show this help.
   dup [file] [arguments...]      Start Compose services in the background.
   de [-f file]                   Open interactive Bash in the Compose container.
+  de <container>                Open interactive Bash by container name or ID.
   cdc [--force] [destination]    Copy the Compose template from Gitea main.
   update-scripts [--force]       Update all installed shortcuts from Gitea main.
 
 dup and de default to ./docker-compose.yml.
-de requires exactly one running container in the Compose project.
+Without a container argument, de requires exactly one running Compose container.
 cdc defaults to ./docker-compose.yml and refuses to overwrite it.
 Set GITEA_TOKEN for private template access. HTTPS certificates must be trusted.
 
@@ -24,6 +25,7 @@ Examples:
   dup ./docker-compose.yml web
   de
   de -f ./other.yml
+  de my-container
   cdc --force
 
 Run each command with --help for details.
