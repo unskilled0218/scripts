@@ -1,14 +1,28 @@
 #!/bin/bash
+set -euo pipefail
 
-mapfile -t paths < <(find ~/backup/sync/certs -type f -name "*.lanCA.crt" -print)
+cert_source="$HOME/backup/sync/certs"
+cert_destination="/usr/local/share/ca-certificates"
+ca_bundle="/etc/ssl/certs/ca-certificates.crt"
 
-if ((${#paths[@]} == 0)); then
-  echo "empty"
+if [[ ! -d "$cert_source" ]]; then
+  echo "Certificate directory not found: $cert_source" >&2
+  exit 1
+fi
+
+mapfile -d '' -t certificates < <(find "$cert_source" -type f -name '*.lanCA.crt' -print0)
+
+if ((${#certificates[@]} == 0)); then
+  echo "No *.lanCA.crt certificates found in $cert_source"
 else
-  for p in "${paths[@]}"; do
-    ca="$(basename "$p")"
-    sudo cp $p /usr/local/share/ca-certificates/$ca
-    sudo update-ca-certificates
-    openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /usr/local/share/ca-certificates/$ca
+  sudo mkdir -p "$cert_destination"
+  for cert in "${certificates[@]}"; do
+    sudo cp -- "$cert" "$cert_destination/${cert##*/}"
+  done
+
+  sudo update-ca-certificates
+
+  for cert in "${certificates[@]}"; do
+    openssl verify -CAfile "$ca_bundle" "$cert_destination/${cert##*/}"
   done
 fi
