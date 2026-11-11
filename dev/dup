@@ -1,22 +1,32 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "${1:-}" == '--help' || "${1:-}" == '-h' ]]; then
+usage() {
   cat <<'HELP'
-Usage: dup [file] [arguments...]
+Usage: dup [-f file] [arguments...]
 Run docker compose -f <file> up -d with any remaining arguments.
-The file defaults to ./docker-compose.yml. If supplied, it must come first.
-Example: dup ./docker-compose.yml --build web
+The file defaults to ./docker-compose.yml. Use -f/--file before up arguments.
+Example: dup -f ./docker-compose.yml --build web
 Relative paths inside the Compose file resolve from its directory.
 HELP
-  exit 0
-fi
+}
 
 file='./docker-compose.yml'
-if [[ $# -gt 0 && "$1" != -* ]]; then
-  file="$1"
-  shift
-fi
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    -f|--file)
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* ]]; then
+        printf 'Option %s requires a file.\n' "$1" >&2
+        exit 2
+      fi
+      file="$2"
+      shift 2
+      ;;
+    --) shift; break ;;
+    *) break ;;
+  esac
+done
 if [[ ! -f "$file" ]]; then
   printf 'Compose file not found: %s\n' "$file" >&2
   exit 1

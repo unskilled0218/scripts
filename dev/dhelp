@@ -9,22 +9,27 @@ esac
 cat <<'HELP'
 Docker shortcuts (requires Docker with the Compose plugin):
   dhelp                         Show this help.
-  dup [file] [arguments...]      Start Compose services in the background.
-  de [-f file]                   Open interactive Bash in the Compose container.
-  de <container>                Open interactive Bash by container name or ID.
+  dup [-f file] [arguments...]   Start Compose services in the background.
+  ddown [-f file] [arguments...] Stop and remove Compose services.
+  de [-f file] [-u user]         Open interactive Bash in the Compose container.
+  de [-u user] <container>       Open interactive Bash by container name or ID.
   cdc [--force] [destination]    Copy the Compose template from Gitea main.
   update-scripts [--force]       Update all installed shortcuts from Gitea main.
 
-dup and de default to ./docker-compose.yml.
+dup, ddown, and de default to ./docker-compose.yml; --file also accepts a file.
+de accepts -u/--user to select the container user.
 Without a container argument, de requires exactly one running Compose container.
 cdc defaults to ./docker-compose.yml and refuses to overwrite it.
 Set GITEA_TOKEN for private template access. HTTPS certificates must be trusted.
 
 Examples:
   dup
-  dup ./docker-compose.yml web
+  dup -f ./docker-compose.yml web
+  ddown -f ./docker-compose.yml
   de
   de -f ./other.yml
+  de -f ./other.yml -u root
+  de -f ./other.yml -u container
   de my-container
   cdc --force
 

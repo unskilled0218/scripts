@@ -7,7 +7,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       cat <<'HELP'
 Usage: update-scripts [--force]
-Update dhelp, dup, de, cdc, and update-scripts from https://git.lan/dev/scripts, branch main.
+Update dhelp, dup, ddown, de, cdc, and update-scripts from https://git.lan/dev/scripts, branch main.
 Requires Git. Uses install.sh from the downloaded repository.
 Set GITEA_TOKEN for private repository access, or use Git's credential helper.
 Trust the server's TLS certificate. TLS verification remains enabled.

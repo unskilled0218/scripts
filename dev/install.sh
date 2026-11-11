@@ -11,7 +11,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       cat <<'HELP'
 Usage: install.sh [--force] [--source directory]
-Install dhelp, dup, de, cdc, and update-scripts into ~/.local/bin.
+Install dhelp, dup, ddown, de, cdc, and update-scripts into ~/.local/bin.
 Protect unrelated files and locally edited commands unless --force is used.
 Use --source to install commands from another directory.
 Requires Bash, sha256sum, and standard GNU file utilities. No sudo is needed.
@@ -66,14 +66,14 @@ ASKPASS
   exit 0
 fi
 
-commands=(dhelp dup de cdc update-scripts)
+commands=(dhelp dup ddown de cdc update-scripts)
 destination="$HOME/.local/bin"
 state="$HOME/.local/share/dev-scripts"
 manifest="$state/checksums"
 declare -A previous=()
 if [[ -f "$manifest" ]]; then
   while read -r checksum name; do
-    if [[ "$checksum" =~ ^[0-9a-f]{64}$ && "$name" =~ ^(dhelp|dup|de|cdc|update-scripts)$ ]]; then
+    if [[ "$checksum" =~ ^[0-9a-f]{64}$ && "$name" =~ ^(dhelp|dup|ddown|de|cdc|update-scripts)$ ]]; then
       previous["$name"]="$checksum"
     fi
   done < "$manifest"
