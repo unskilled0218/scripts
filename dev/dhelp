@@ -9,14 +9,16 @@ esac
 cat <<'HELP'
 Docker shortcuts (requires Docker with the Compose plugin):
   dhelp                         Show this help.
-  dup [-f file] [arguments...]   Start Compose services in the background.
-  ddown [-f file] [arguments...] Stop and remove Compose services.
-  de [-f file] [-u user]         Open interactive Bash in the Compose container.
+  dup [-f file | -p name] [arguments...]   Start Compose services in the background.
+  ddown [-f file | -p name] [arguments...] Stop and remove Compose services.
+  de [-f file | -p name] [-u user]         Open interactive Bash in the Compose container.
   de [-u user] <container>       Open interactive Bash by container name or ID.
   cdc [--force] [destination]    Copy the Compose template from Gitea main.
   update-scripts [--force]       Update all installed shortcuts from Gitea main.
 
 dup, ddown, and de default to ./docker-compose.yml; --file also accepts a file.
+Use -p <name> to select ./docker-compose.<name>.yml instead (not a project name).
+Do not combine -p with -f/--file.
 de accepts -u/--user to select the container user.
 Without a container argument, de requires exactly one running Compose container.
 cdc defaults to ./docker-compose.yml and refuses to overwrite it.
@@ -24,6 +26,9 @@ Set GITEA_TOKEN for private template access. HTTPS certificates must be trusted.
 
 Examples:
   dup
+  dup -p dev
+  ddown -p dev
+  de -p dev
   dup -f ./docker-compose.yml web
   ddown -f ./docker-compose.yml
   de

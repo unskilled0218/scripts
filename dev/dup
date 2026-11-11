@@ -3,15 +3,18 @@ set -euo pipefail
 
 usage() {
   cat <<'HELP'
-Usage: dup [-f file] [arguments...]
+Usage: dup [-f file | -p name] [arguments...]
 Run docker compose -f <file> up -d with any remaining arguments.
-The file defaults to ./docker-compose.yml. Use -f/--file before up arguments.
+The file defaults to ./docker-compose.yml. Use -f/--file or -p before up arguments.
+-p selects ./docker-compose.<name>.yml, not a Compose project name.
 Example: dup -f ./docker-compose.yml --build web
+Example: dup -p dev
 Relative paths inside the Compose file resolve from its directory.
 HELP
 }
 
 file='./docker-compose.yml'
+file_set=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
@@ -20,7 +23,25 @@ while [[ $# -gt 0 ]]; do
         printf 'Option %s requires a file.\n' "$1" >&2
         exit 2
       fi
+      if [[ "$file_set" == true ]]; then
+        printf 'Use only one of -f/--file or -p.\n' >&2
+        exit 2
+      fi
       file="$2"
+      file_set=true
+      shift 2
+      ;;
+    -p)
+      if [[ $# -lt 2 || -z "$2" || "$2" == -* || "$2" == */* ]]; then
+        printf 'Option %s requires a name without slashes.\n' "$1" >&2
+        exit 2
+      fi
+      if [[ "$file_set" == true ]]; then
+        printf 'Use only one of -f/--file or -p.\n' >&2
+        exit 2
+      fi
+      file="./docker-compose.$2.yml"
+      file_set=true
       shift 2
       ;;
     --) shift; break ;;
