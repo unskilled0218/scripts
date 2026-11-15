@@ -9,6 +9,7 @@ curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/nfs.sh" | 
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/ntfy.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/caps-lock-as-ctrl.sh" | bash
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/wireguard.sh" | bash
+curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/wacom.sh" | bash
 
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/func/is-gnome.sh" -o /tmp/is-gnome.sh
 curl -fsSLk "https://git.lan/dev/scripts/raw/branch/main/setup-ubuntu/func/is-installed.sh" -o /tmp/is-installed.sh
