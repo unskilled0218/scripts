@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+cert_destination="/usr/local/share/ca-certificates"
 nss_database="sql:$HOME/.pki/nssdb"
 
 # chromium
