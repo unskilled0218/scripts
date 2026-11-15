@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+sudo apt-get update && sudo apt-get install -y wacom
+
 cat >> $HOME/.local/bin/wacom-set.sh <<EOF
 #!/usr/bin/env bash
 
@@ -9,7 +11,7 @@ MAC="F8:A7:22:A7:2F:D7"  # Replace with your tablet's Bluetooth MAC
 STYLUS="Wacom One pen tablet small stylus"
 ERASER="Wacom One pen tablet small eraser"
 
-SPEED=-0.3
+SPEED=2
 
 was_connected=false
 
@@ -26,12 +28,12 @@ while true; do
           xsetwacom set "$ERASER" Rotate half
 
           STYLUS_ID=$(xinput list --id-only "$STYLUS" 2>/dev/null | head -n1)
-          ERASER_ID=$(xinput list --id-only "$STYLUS" 2>/dev/null | head -n1)
+          ERASER_ID=$(xinput list --id-only "$ERASER" 2>/dev/null | head -n1)
           if [[ -n "$STYLUS_ID" ]]; then
-            xinput --set-prop "$STYLUS_ID" "libinput Accel Speed" $SPEED 2>/dev/null || true
+	          xinput --set-prop "$STYLUS_ID" "Device Accel Constant Deceleration" $SPEED 2>/dev/null 
           fi
           if [[ -n "$ERASER_ID" ]]; then
-            xinput --set-prop "$ERASER_ID" "libinput Accel Speed" $SPEED 2>/dev/null || true
+	          xinput --set-prop "$ERASER_ID" "Device Accel Constant Deceleration" $SPEED 2>/dev/null 
           fi
         fi
         sleep 3
